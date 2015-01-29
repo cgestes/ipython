@@ -72,7 +72,7 @@ define([
             };
             this.update_mapped_classes(class_map, 'box_style', previous_trait_value, this.$box);
         },
-        
+
         add_child_model: function(model) {
             /**
              * Called when a model is added to the children list.
@@ -90,7 +90,7 @@ define([
                 return view;
             }).catch(utils.reject("Couldn't add child view to box", true));
         },
-        
+
         remove: function() {
             /**
              * We remove this widget before removing the children as an optimization
@@ -147,6 +147,52 @@ define([
         },
     });
 
+    var DockView = BoxView.extend({
+        render: function(){
+            //DockView.__super__.render.apply(this);
+            /** create a fake view in $el ..
+             *  create a new view with the content and link it to $el
+             * this.$box is where child will be added
+             **/
+            var that = this;
+
+            this.$el.on("remove", function(){
+                that.$dock.close();
+                that.$window.remove();
+            });
+
+            this.$window = $('<div/>')
+                .css('width', '300px')
+                .css('height', '100px')
+                .addClass('widget-area')
+                .appendTo($('body'));
+                // .mousedown(function(){
+                //     that.bring_to_front();
+                // });
+            this.$box = $('<div />')
+                .css('width', '100%')
+                .css('height', '100%')
+                // .addClass('modal-body')
+                // .addClass('widget-modal-body')
+                // .addClass('widget-box')
+                // .addClass('vbox')
+                .appendTo(this.$window);
+
+            // Set the elements array since the this.$window element is not child
+            // of this.$el and the parent widget manager or other widgets may
+            // need to know about all of the top-level widgets.  The IPython
+            // widget manager uses this to register the elements with the
+            // keyboard manager.
+            this.additional_elements = [this.$window];
+
+            this.children_views.update(this.model.get('children'))
+
+            //create a dock panel
+            that.$dock = new dockspawn.PanelContainer(this.$window[0], dockManager);
+            dockManager.floatDialog(that.$dock, 100, 100);
+        }
+    });
+
     var PopupView = BoxView.extend({
 
         render: function(){
@@ -154,7 +200,7 @@ define([
              * Called when view is rendered.
              */
             var that = this;
-            
+
             this.$el.on("remove", function(){
                     that.$backdrop.remove();
                 });
@@ -201,7 +247,7 @@ define([
                         that.$minimize
                             .removeClass('fa-arrow-down')
                             .addClass('fa-arrow-up');
-                            
+
                         that.$window
                             .draggable('destroy')
                             .resizable('destroy')
@@ -233,14 +279,14 @@ define([
             this.$title = $('<div />')
                 .addClass('widget-modal-title')
                 .html("&nbsp;")
-                .appendTo(this.$title_bar);     
+                .appendTo(this.$title_bar);
             this.$box = $('<div />')
                 .addClass('modal-body')
                 .addClass('widget-modal-body')
                 .addClass('widget-box')
                 .addClass('vbox')
                 .appendTo(this.$window);
-            
+
             this.$show_button = $('<button />')
                 .html("&nbsp;")
                 .addClass('btn btn-info widget-modal-show')
@@ -248,7 +294,7 @@ define([
                 .click(function(){
                     that.show();
                 });
-            
+
             this.$window.draggable({handle: '.popover-title', snap: '#notebook, .modal', snapMode: 'both'});
             this.$window.resizable();
             this.$window.on('resize', function(){
@@ -260,7 +306,7 @@ define([
 
             this.children_views.update(this.model.get('children'))
         },
-        
+
         hide: function() {
             /**
              * Called when the modal hide button is clicked.
@@ -268,7 +314,7 @@ define([
             this.$window.hide();
             this.$show_button.removeClass('btn-info');
         },
-        
+
         show: function() {
             /**
              * Called when the modal show button is clicked.
@@ -278,12 +324,12 @@ define([
             if (this.popped_out) {
                 this.$window.css("positon", "absolute");
                 this.$window.css("top", "0px");
-                this.$window.css("left", Math.max(0, (($('body').outerWidth() - this.$window.outerWidth()) / 2) + 
+                this.$window.css("left", Math.max(0, (($('body').outerWidth() - this.$window.outerWidth()) / 2) +
                     $(window).scrollLeft()) + "px");
                 this.bring_to_front();
             }
         },
-        
+
         bring_to_front: function() {
             /**
              * Make the modal top-most, z-ordered about the other modals.
@@ -296,10 +342,10 @@ define([
                     max_zindex = Math.max(max_zindex, zindex);
                 }
             });
-            
+
             // Start z-index of widget modals at 2000
             max_zindex = Math.max(max_zindex, 2000);
-            
+
             $widget_modals.each(function (index, el){
                 $el = $(el);
                 if (max_zindex == parseInt($el.css('z-index'))) {
@@ -308,12 +354,12 @@ define([
             });
             this.$window.css('z-index', max_zindex);
         },
-        
+
         update: function(){
             /**
              * Update the contents of this view
              *
-             * Called when the model is changed.  The model may have been 
+             * Called when the model is changed.  The model may have been
              * changed by another view or by a state update from the back-end.
              */
             var description = this.model.get('description');
@@ -322,22 +368,22 @@ define([
             } else {
                 this.typeset(this.$title, description);
             }
-            
+
             var button_text = this.model.get('button_text');
             if (button_text.trim().length === 0) {
                 this.$show_button.html("&nbsp;"); // Preserve button height
             } else {
                 this.$show_button.text(button_text);
             }
-            
+
             if (!this._shown_once) {
                 this._shown_once = true;
                 this.show();
             }
-            
+
             return PopupView.__super__.update.apply(this);
         },
-        
+
         _get_selector_element: function(selector) {
             /**
              * Get an element view a 'special' jquery selector.  (see widget.js)
@@ -366,5 +412,6 @@ define([
         'BoxView': BoxView,
         'PopupView': PopupView,
         'FlexBoxView': FlexBoxView,
+        'DockView': DockView,
     };
 });

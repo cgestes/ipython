@@ -1,4 +1,4 @@
-"""Box class.  
+"""Box class.
 
 Represents a container that can be used to group other widgets.
 """
@@ -19,19 +19,19 @@ class Box(DOMWidget):
     # Using a tuple here to force reassignment to update the list.
     # When a proper notifying-list trait exists, that is what should be used here.
     children = Tuple(sync=True, allow_none=False)
-    
+
     _overflow_values = ['visible', 'hidden', 'scroll', 'auto', 'initial', 'inherit', '']
     overflow_x = CaselessStrEnum(
-        values=_overflow_values, 
+        values=_overflow_values,
         default_value='', allow_none=False, sync=True, help="""Specifies what
         happens to content that is too large for the rendered region.""")
     overflow_y = CaselessStrEnum(
-        values=_overflow_values, 
+        values=_overflow_values,
         default_value='', allow_none=False, sync=True, help="""Specifies what
         happens to content that is too large for the rendered region.""")
 
     box_style = CaselessStrEnum(
-        values=['success', 'info', 'warning', 'danger', ''], 
+        values=['success', 'info', 'warning', 'danger', ''],
         default_value='', allow_none=True, sync=True, help="""Use a
         predefined styling for the box.""")
 
@@ -49,9 +49,15 @@ class Box(DOMWidget):
 class Popup(Box):
     """Displays multiple widgets in an in page popup div."""
     _view_name = Unicode('PopupView', sync=True)
-    
+
     description = Unicode(sync=True)
     button_text = Unicode(sync=True)
+
+@register('IPython.Dock')
+class Dock(Box):
+    """Displays multiple widgets in a dock"""
+    _view_name = Unicode('DockView', sync=True)
+    description = Unicode(sync=True)
 
 
 @register('IPython.FlexBox')
@@ -67,10 +73,10 @@ class FlexBox(Box):
 
     _locations = ['start', 'center', 'end', 'baseline', 'stretch']
     pack = CaselessStrEnum(
-        values=_locations, 
+        values=_locations,
         default_value='start', allow_none=False, sync=True)
     align = CaselessStrEnum(
-        values=_locations, 
+        values=_locations,
         default_value='start', allow_none=False, sync=True)
 
 
@@ -88,4 +94,3 @@ def HBox(*pargs, **kwargs):
 # Remove in IPython 4.0
 ContainerWidget = DeprecatedClass(Box, 'ContainerWidget')
 PopupWidget = DeprecatedClass(Popup, 'PopupWidget')
-
