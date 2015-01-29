@@ -8137,15 +8137,15 @@ label {
 }
 /* Flexible box model classes */
 /* Taken from Alex Russell http://infrequently.org/2009/08/css-3-progress/ */
-/* This file is a compatability layer.  It allows the usage of flexible box 
+/* This file is a compatability layer.  It allows the usage of flexible box
 model layouts accross multiple browsers, including older browsers.  The newest,
 universal implementation of the flexible box model is used when available (see
-`Modern browsers` comments below).  Browsers that are known to implement this 
+`Modern browsers` comments below).  Browsers that are known to implement this
 new spec completely include:
 
     Firefox 28.0+
     Chrome 29.0+
-    Internet Explorer 11+ 
+    Internet Explorer 11+
     Opera 17.0+
 
 Browsers not listed, including Safari, are supported via the styling under the
@@ -9903,12 +9903,12 @@ h6:hover .anchor-link {
   /* Round the corners of the slide track */
 }
 .widget-hslider {
-  /* Horizontal jQuery Slider 
+  /* Horizontal jQuery Slider
 
     Both the horizontal and vertical versions of the slider are characterized
-    by a styled div that contains an invisible jQuery slide div which 
+    by a styled div that contains an invisible jQuery slide div which
     contains a visible slider handle div.  This is requred so we can control
-    how the slider is drawn and 'fix' the issue where the slide handle 
+    how the slider is drawn and 'fix' the issue where the slide handle
     doesn't stop at the end of the slide.
 
     Both horizontal and vertical sliders have this div nesting:
@@ -9922,7 +9922,7 @@ h6:hover .anchor-link {
     |  +--------+---------------------------+  |
     +------------------------------------------+
     */
-  /* Fix the padding of the slide track so the ui-slider is sized 
+  /* Fix the padding of the slide track so the ui-slider is sized
     correctly. */
   padding-left: 8px;
   padding-right: 2px;
@@ -9993,7 +9993,7 @@ h6:hover .anchor-link {
 }
 .widget-vslider {
   /* Vertical jQuery Slider */
-  /* Fix the padding of the slide track so the ui-slider is sized 
+  /* Fix the padding of the slide track so the ui-slider is sized
     correctly. */
   padding-bottom: 5px;
   overflow: visible;
@@ -10236,7 +10236,8 @@ div#notebook_panel {
   -webkit-box-sizing: border-box;
 }
 @media not print {
-  #notebook-container {
+#notebook-container {
+    width: 100%;
     padding: 15px;
     background-color: #ffffff;
     min-height: 0;
@@ -10935,7 +10936,7 @@ div#pager .ui-resizable-handle {
   background: #f7f7f7;
   border-top: 1px solid #cfcfcf;
   border-bottom: 1px solid #cfcfcf;
-  /* This injects handle bars (a short, wide = symbol) for 
+  /* This injects handle bars (a short, wide = symbol) for
         the resize handle. */
 }
 div#pager .ui-resizable-handle::after {

@@ -18,7 +18,7 @@ define([
         // - header change
         // - page load
         var _handle_resize = $.proxy(this._resize_site, this);
-        
+
         $(window).resize(_handle_resize);
 
         // On document ready, resize codemirror.
@@ -56,7 +56,8 @@ define([
 
     Page.prototype._resize_site = function() {
         // Update the site's size.
-        $('div#site').height(window.innerHeight - $('#header').height());
+        //$('div#site').height(window.innerHeight - $('#header').height());
+        $('div#site').height('100%');
     };
 
     // Register self in the global namespace for convenience.
