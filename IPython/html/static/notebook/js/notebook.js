@@ -58,6 +58,7 @@ define(function (require) {
         this.ws_url = options.ws_url;
         this._session_starting = false;
         this.last_modified = null;
+        this.cell_elements = [];
 
         //  Create default scroll manager.
         this.scroll_manager = new scrollmanager.ScrollManager(this);
@@ -400,7 +401,7 @@ define(function (require) {
      * @return {jQuery} A selector of all cell elements
      */
     Notebook.prototype.get_cell_elements = function () {
-        return this.container.find(".cell").not('.cell .cell');
+        return $(this.cell_elements);
     };
 
     /**
@@ -796,7 +797,10 @@ define(function (require) {
         if (this.is_valid_cell_index(i)) {
             var old_ncells = this.ncells();
             var ce = this.get_cell_element(i);
+            //remove one elt
+            this.cell_elements.splice(i, 1);
             ce.remove();
+
             if (i === 0) {
                 // Always make sure we have at least one cell.
                 if (old_ncells === 1) {
@@ -944,15 +948,21 @@ define(function (require) {
 
         var ncells = this.ncells();
 
+        //convert the element to a real element. (element can be a function)
+        var mydiv = $("<div/>").append(element);
+        var elt = mydiv.children()[0];
+
+        this.cell_elements.splice(index, 0, elt);
+
         if (ncells === 0) {
             // special case append if empty
-            this.container.append(element);
+            this.container.append(elt);
         } else if ( ncells === index ) {
             // special case append it the end, but not empty
-            this.get_cell_element(index-1).after(element);
+            this.get_cell_element(index-1).after(elt);
         } else if (this.is_valid_cell_index(index)) {
             // otherwise always somewhere to append to
-            this.get_cell_element(index).before(element);
+            this.get_cell_element(index).before(elt);
         } else {
             return false;
         }
